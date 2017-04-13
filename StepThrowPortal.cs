@@ -9,62 +9,59 @@ public class StepThrowPortal : MonoBehaviour {
 
     void OnTriggerEnter (Collider other)
 	{
-		if (other.CompareTag ("Player")) {
-			rb = other.gameObject.GetComponent<Rigidbody>();
-            print("First rb: " + rb + "\tVelocity: " + rb.velocity);
-			velocity = rb.velocity; 
-			if (this.CompareTag ("Left portal")) {
-                if (velocity.y <= (-48))
-                {
-                    velocity.y = (-50);
+        GameObject left = CreatePortal.oldLeft;
+        GameObject right = CreatePortal.oldRight;
+        if(left != null && right != null)
+        {
+		    if (other.CompareTag ("Player")) {
+			    rb = other.gameObject.GetComponent<Rigidbody>();
+                print("First rb: " + rb + "\tVelocity: " + rb.velocity);
+			    velocity = rb.velocity; 
+			    if (this.CompareTag ("Left portal")) {
+                    if (velocity.y <= (-48))
+                    {
+                        velocity.y = (-50);
+                    }
+                    // We reflect the incoming velocity in the portal
+                    velocity = Vector3.Reflect(velocity, this.transform.forward);
+                    // We transform it in local coordinates
+                    velocity = this.transform.InverseTransformDirection(velocity);
+                    // We align the velocity vector with the other portal 
+                    velocity = CreatePortal.oldRight.transform.TransformDirection(velocity);
+                    // Teletransport your player in front of the other portal
+                    other.transform.position = right.transform.position - right.transform.forward*1.5f;
+                    // If you have to turn around your player, do it
+                    if (transform.rotation.y == right.transform.rotation.y)
+                    {
+                        other.transform.Rotate(new Vector3(0, 180, 0));
+                    }
+                    // Update velocity
+                    rb.velocity = velocity;
+			    }
+                else {
+                    // As we have not the engine of Valve, our player can touch the floor as it falls and lose velocity.
+                    // For this reason we limit the velocity if our player is falling down
+                    if(velocity.y <= (-48))
+                    {
+                        velocity.y = (-50);
+                    }
+                    // We reflect the incoming velocity in the portal
+                    velocity = Vector3.Reflect(velocity, this.transform.forward);
+                    // We transform it in local coordinates
+                    velocity = this.transform.InverseTransformDirection(velocity);
+                    // We align the velocity vector with the other portal 
+                    velocity = CreatePortal.oldLeft.transform.TransformDirection(velocity);
+                    // Teletransport your player in front of the other portal
+                    other.transform.position = left.transform.position - left.transform.forward*1.5f;
+                    // If you have to turn around your player, do it
+                    if (transform.rotation.y == left.transform.rotation.y)
+                    {
+				        other.transform.Rotate (new Vector3 (0, 180,0));
+                    }
+                    // Update velocity
+                    rb.velocity = velocity;
                 }
-//                print("Velocity without reflect: " + velocity);
-                velocity = Vector3.Reflect(velocity, this.transform.forward);
-//                print("Velocity with reflect: " + velocity);
-                velocity = this.transform.InverseTransformDirection(velocity);
-//                print("this.transform.InverseTransformDirection(velocity): " + velocity);
-                velocity = CreatePortal.oldRight.transform.TransformDirection(velocity);
-//                print("CreatePortal.oldRight.transform.TransformDirection(velocity): " + velocity);
-                other.transform.position = CreatePortal.oldRight.transform.position - CreatePortal.oldRight.transform.forward*1.5f;
-                if (transform.rotation.y == CreatePortal.oldRight.transform.rotation.y)
-                {
-                    other.transform.Rotate(new Vector3(0, 180, 0));
-                }
-                rb.velocity = velocity;
-			} else {
-                if(velocity.y <= (-48))
-                {
-                    velocity.y = (-50);
-                }
-//                print("Velocity without reflect: " + velocity);
-                velocity = Vector3.Reflect(velocity, this.transform.forward);
-//                print("Velocity with reflect: " + velocity);
-                velocity = this.transform.InverseTransformDirection(velocity);
-//                print("this.transform.InverseTransformDirection(velocity): " + velocity);
-                velocity = CreatePortal.oldLeft.transform.TransformDirection(velocity);
-                //                print("CreatePortal.oldRight.transform.TransformDirection(velocity): " + velocity);
-                other.transform.position = CreatePortal.oldLeft.transform.position - CreatePortal.oldLeft.transform.forward*1.5f;
-                if (transform.rotation.y == CreatePortal.oldLeft.transform.rotation.y)
-                {
-				    other.transform.Rotate (new Vector3 (0, 180,0));
-                }
-                rb.velocity = velocity;
-            }
-//               EnableCollider(other, false);
-//                Wait(1f);
-//                EnableCollider(other, true);
-            print("Velocity: " + rb.velocity);
-		}
+		    }
+        }
 	}
-
-    private void EnableCollider(Collider other,bool enable)
-    {
-        other.enabled = enable;
-        print("Collider: " + enable);
-    }
-
-    private IEnumerator Wait(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-    }
 }

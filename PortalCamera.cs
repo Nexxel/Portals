@@ -17,9 +17,12 @@ public class PortalCamera : MonoBehaviour {
 		} else {
 			portals = GameObject.FindGameObjectsWithTag ("Left portal");
 		}
+        // If we don't find a portal of the other type, we keep it in its normal color (Red or blue in Portal) 
 		if (portals.Length == 0) {
 			this.GetComponent <Renderer> ().material = basicMaterial;
-		} else {
+		}
+        // If we find a portal of the other type, we take the camera of the other portal
+        else {
 			this.GetComponent <Renderer> ().material = portalMaterial;
 		}
 	}

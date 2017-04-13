@@ -14,32 +14,31 @@ public class CreatePortal : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+        // We have theportals with the tag Left portal and Right portal and we look for those portals 
 		oldLeft = GameObject.FindGameObjectWithTag ("Left portal");
 		oldRight = GameObject.FindGameObjectWithTag ("Right portal");
+        // As in Portal, with the left click we generate a kind of portal.
+        // And with the right click, another one.
 		if (Input.GetMouseButton (0)) {
-			if (oldLeft != null) {
-				DestroyImmediate (oldLeft);
-			}
-			oldLeft = throwPortal(leftPortal);
-
+			oldLeft = throwPortal(leftPortal, oldLeft);
 		} else if(Input.GetMouseButton (1)){
-			if (oldRight != null) {
-				DestroyImmediate (oldRight);
-			}
-			oldRight = throwPortal (rightPortal);
+			oldRight = throwPortal (rightPortal, oldRight);
 		}
 	}
 
-	public GameObject throwPortal (GameObject portal)
+	public GameObject throwPortal (GameObject portal, GameObject destroyedPortal)
 	{
-//		int x = Screen.width/2;
-//		int y = Screen.height/2;
-
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		if(Physics.Raycast (ray, out hit)){
             if (hit.collider.gameObject.CompareTag("Terrain"))
             {
-			    portal = Instantiate (portal,hit.point,Quaternion.LookRotation (-hit.normal));
+                // If there is another portal, of the same type, destroy it and them instantiate another
+                // where the raycast impact.
+                if (destroyedPortal != null)
+                {
+                    DestroyImmediate(destroyedPortal);
+                }
+                portal = Instantiate (portal,hit.point,Quaternion.LookRotation (-hit.normal));
             }
 		}
 		return portal;
