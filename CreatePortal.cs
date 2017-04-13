@@ -20,13 +20,13 @@ public class CreatePortal : MonoBehaviour {
         // As in Portal, with the left click we generate a kind of portal.
         // And with the right click, another one.
 		if (Input.GetMouseButton (0)) {
-			oldLeft = throwPortal(leftPortal, oldLeft);
+			throwPortal(leftPortal, oldLeft);
 		} else if(Input.GetMouseButton (1)){
-			oldRight = throwPortal (rightPortal, oldRight);
+			throwPortal (rightPortal, oldRight);
 		}
 	}
 
-	public GameObject throwPortal (GameObject portal, GameObject destroyedPortal)
+	public void throwPortal (GameObject portal, GameObject destroyedPortal)
 	{
 		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		if(Physics.Raycast (ray, out hit)){
@@ -38,9 +38,8 @@ public class CreatePortal : MonoBehaviour {
                 {
                     DestroyImmediate(destroyedPortal);
                 }
-                portal = Instantiate (portal,hit.point,Quaternion.LookRotation (-hit.normal));
+                destroyedPortal = Instantiate (portal,hit.point,Quaternion.LookRotation (-hit.normal));
             }
 		}
-		return portal;
 	}
 }
