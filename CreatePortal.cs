@@ -32,12 +32,15 @@ public class CreatePortal : MonoBehaviour {
 
 	public GameObject throwPortal (GameObject portal)
 	{
-		int x = Screen.width/2;
-		int y = Screen.height/2;
+//		int x = Screen.width/2;
+//		int y = Screen.height/2;
 
-		Ray ray = Camera.main.ScreenPointToRay (new Vector3(x,y));
+		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		if(Physics.Raycast (ray, out hit)){
-			portal = Instantiate (portal,hit.point,Quaternion.LookRotation (-hit.normal));
+            if (hit.collider.gameObject.CompareTag("Terrain"))
+            {
+			    portal = Instantiate (portal,hit.point,Quaternion.LookRotation (-hit.normal));
+            }
 		}
 		return portal;
 	}

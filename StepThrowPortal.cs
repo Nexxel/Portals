@@ -25,8 +25,11 @@ public class StepThrowPortal : MonoBehaviour {
 //                print("this.transform.InverseTransformDirection(velocity): " + velocity);
                 velocity = CreatePortal.oldRight.transform.TransformDirection(velocity);
 //                print("CreatePortal.oldRight.transform.TransformDirection(velocity): " + velocity);
-                other.transform.position = CreatePortal.oldRight.transform.GetChild (1).position;
-                other.transform.Rotate(new Vector3(0, CreatePortal.oldRight.transform.rotation.y, 0));
+                other.transform.position = CreatePortal.oldRight.transform.position - CreatePortal.oldRight.transform.forward*1.5f;
+                if (transform.rotation.y == CreatePortal.oldRight.transform.rotation.y)
+                {
+                    other.transform.Rotate(new Vector3(0, 180, 0));
+                }
                 rb.velocity = velocity;
 			} else {
                 if(velocity.y <= (-48))
@@ -39,14 +42,17 @@ public class StepThrowPortal : MonoBehaviour {
                 velocity = this.transform.InverseTransformDirection(velocity);
 //                print("this.transform.InverseTransformDirection(velocity): " + velocity);
                 velocity = CreatePortal.oldLeft.transform.TransformDirection(velocity);
-//                print("CreatePortal.oldRight.transform.TransformDirection(velocity): " + velocity);
-                other.transform.position = CreatePortal.oldLeft.transform.GetChild (1).position;
-				other.transform.Rotate (new Vector3 (0, CreatePortal.oldLeft.transform.rotation.y,0));
+                //                print("CreatePortal.oldRight.transform.TransformDirection(velocity): " + velocity);
+                other.transform.position = CreatePortal.oldLeft.transform.position - CreatePortal.oldLeft.transform.forward*1.5f;
+                if (transform.rotation.y == CreatePortal.oldLeft.transform.rotation.y)
+                {
+				    other.transform.Rotate (new Vector3 (0, 180,0));
+                }
                 rb.velocity = velocity;
             }
-//            EnableCollider(other, false);
-//            Wait(0.1f);
-//            EnableCollider(other, true);
+//               EnableCollider(other, false);
+//                Wait(1f);
+//                EnableCollider(other, true);
             print("Velocity: " + rb.velocity);
 		}
 	}
